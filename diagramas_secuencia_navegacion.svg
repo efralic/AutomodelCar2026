@@ -1,0 +1,264 @@
+<svg width="1200" height="1600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; fill: #34495e; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; fill: #2c3e50; }
+      .small-label { font-family: Arial, sans-serif; font-size: 10px; fill: #7f8c8d; }
+      .actor-box { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .actor-text { font-family: Arial, sans-serif; font-size: 11px; fill: white; font-weight: bold; }
+      .lifeline { stroke: #bdc3c7; stroke-width: 2; stroke-dasharray: 5,5; }
+      .message-line { stroke: #e74c3c; stroke-width: 2; marker-end: url(#arrowhead); }
+      .return-line { stroke: #27ae60; stroke-width: 1.5; stroke-dasharray: 3,3; marker-end: url(#arrowhead-green); }
+      .activation { fill: #f39c12; stroke: #e67e22; stroke-width: 1; opacity: 0.7; }
+      .note { fill: #fff3cd; stroke: #ffc107; stroke-width: 1; }
+      .note-text { font-family: Arial, sans-serif; font-size: 10px; fill: #856404; }
+      .mode-section { fill: #ecf0f1; stroke: #bdc3c7; stroke-width: 1; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60" />
+    </marker>
+  </defs>
+
+  <!-- Título principal -->
+  <text x="600" y="30" text-anchor="middle" class="title">Diagramas de Secuencia - Sistema AVIM</text>
+  <text x="600" y="55" text-anchor="middle" class="subtitle">Modos de Navegación</text>
+
+  <!-- MODO 1: Navegación sin obstáculos -->
+  <rect x="50" y="80" width="1100" height="350" class="mode-section" rx="10"/>
+  <text x="70" y="105" class="subtitle">Modo 1: Navegación sin Obstáculos</text>
+  
+  <!-- Actores -->
+  <rect x="100" y="120" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="140" y="140" text-anchor="middle" class="actor-text">Camera</text>
+  
+  <rect x="250" y="120" width="100" height="30" class="actor-box" rx="5"/>
+  <text x="300" y="140" text-anchor="middle" class="actor-text">Lane Detection</text>
+  
+  <rect x="420" y="120" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="460" y="140" text-anchor="middle" class="actor-text">Master</text>
+  
+  <rect x="570" y="120" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="610" y="140" text-anchor="middle" class="actor-text">Actuators</text>
+  
+  <!-- Líneas de vida -->
+  <line x1="140" y1="150" x2="140" y2="400" class="lifeline"/>
+  <line x1="300" y1="150" x2="300" y2="400" class="lifeline"/>
+  <line x1="460" y1="150" x2="460" y2="400" class="lifeline"/>
+  <line x1="610" y1="150" x2="610" y2="400" class="lifeline"/>
+  
+  <!-- Secuencia de mensajes -->
+  <line x1="140" y1="180" x2="300" y2="180" class="message-line"/>
+  <text x="220" y="175" class="label">image_raw</text>
+  
+  <rect x="295" y="185" width="10" height="40" class="activation"/>
+  <text x="320" y="200" class="small-label">Procesamiento</text>
+  <text x="320" y="215" class="small-label">de imagen</text>
+  
+  <line x1="300" y1="240" x2="460" y2="240" class="message-line"/>
+  <text x="380" y="235" class="label">distance_center</text>
+  
+  <rect x="455" y="245" width="10" height="60" class="activation"/>
+  <text x="480" y="260" class="small-label">Cálculo PID</text>
+  <text x="480" y="275" class="small-label">Control de</text>
+  <text x="480" y="290" class="small-label">dirección</text>
+  
+  <line x1="460" y1="320" x2="610" y2="320" class="message-line"/>
+  <text x="535" y="315" class="label">cmd_vel</text>
+  
+  <rect x="605" y="325" width="10" height="30" class="activation"/>
+  <text x="630" y="340" class="small-label">Movimiento</text>
+  
+  <!-- Notas -->
+  <rect x="700" y="180" width="180" height="80" class="note" rx="5"/>
+  <text x="710" y="200" class="note-text">• Frecuencia: 30 Hz</text>
+  <text x="710" y="215" class="note-text">• Latencia típica: 33ms</text>
+  <text x="710" y="230" class="note-text">• Solo detección de carriles</text>
+  <text x="710" y="245" class="note-text">• Control PID simple</text>
+
+  <!-- MODO 2: Navegación con obstáculos estáticos -->
+  <rect x="50" y="450" width="1100" height="400" class="mode-section" rx="10"/>
+  <text x="70" y="475" class="subtitle">Modo 2: Navegación con Obstáculos Estáticos</text>
+  
+  <!-- Actores -->
+  <rect x="80" y="490" width="60" height="30" class="actor-box" rx="5"/>
+  <text x="110" y="510" text-anchor="middle" class="actor-text">Camera</text>
+  
+  <rect x="180" y="490" width="60" height="30" class="actor-box" rx="5"/>
+  <text x="210" y="510" text-anchor="middle" class="actor-text">LIDAR</text>
+  
+  <rect x="280" y="490" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="320" y="510" text-anchor="middle" class="actor-text">Lane Det.</text>
+  
+  <rect x="400" y="490" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="440" y="510" text-anchor="middle" class="actor-text">Object Det.</text>
+  
+  <rect x="520" y="490" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="560" y="510" text-anchor="middle" class="actor-text">Master Static</text>
+  
+  <rect x="640" y="490" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="680" y="510" text-anchor="middle" class="actor-text">Actuators</text>
+  
+  <!-- Líneas de vida -->
+  <line x1="110" y1="520" x2="110" y2="820" class="lifeline"/>
+  <line x1="210" y1="520" x2="210" y2="820" class="lifeline"/>
+  <line x1="320" y1="520" x2="320" y2="820" class="lifeline"/>
+  <line x1="440" y1="520" x2="440" y2="820" class="lifeline"/>
+  <line x1="560" y1="520" x2="560" y2="820" class="lifeline"/>
+  <line x1="680" y1="520" x2="680" y2="820" class="lifeline"/>
+  
+  <!-- Secuencia de mensajes -->
+  <line x1="110" y1="550" x2="320" y2="550" class="message-line"/>
+  <text x="215" y="545" class="label">image_raw</text>
+  
+  <line x1="210" y1="570" x2="440" y2="570" class="message-line"/>
+  <text x="325" y="565" class="label">scan</text>
+  
+  <rect x="315" y="555" width="10" height="40" class="activation"/>
+  <rect x="435" y="575" width="10" height="60" class="activation"/>
+  
+  <line x1="320" y1="610" x2="560" y2="610" class="message-line"/>
+  <text x="440" y="605" class="label">distance_center</text>
+  
+  <line x1="440" y1="650" x2="560" y2="650" class="message-line"/>
+  <text x="500" y="645" class="label">objects_detected</text>
+  
+  <rect x="555" y="655" width="10" height="80" class="activation"/>
+  <text x="580" y="670" class="small-label">Análisis de</text>
+  <text x="580" y="685" class="small-label">obstáculos</text>
+  <text x="580" y="700" class="small-label">Planificación</text>
+  <text x="580" y="715" class="small-label">de ruta</text>
+  
+  <line x1="560" y1="750" x2="680" y2="750" class="message-line"/>
+  <text x="620" y="745" class="label">cmd_vel</text>
+  
+  <rect x="675" y="755" width="10" height="30" class="activation"/>
+  
+  <!-- Notas -->
+  <rect x="750" y="550" width="200" height="120" class="note" rx="5"/>
+  <text x="760" y="570" class="note-text">• Frecuencia: 20 Hz</text>
+  <text x="760" y="585" class="note-text">• Latencia: 50-80ms</text>
+  <text x="760" y="600" class="note-text">• DBSCAN clustering</text>
+  <text x="760" y="615" class="note-text">• Planificación conservadora</text>
+  <text x="760" y="630" class="note-text">• Parada ante obstáculos</text>
+  <text x="760" y="645" class="note-text">• Replanificación de ruta</text>
+
+  <!-- MODO 3: Navegación con obstáculos dinámicos -->
+  <rect x="50" y="870" width="1100" height="450" class="mode-section" rx="10"/>
+  <text x="70" y="895" class="subtitle">Modo 3: Navegación con Obstáculos Dinámicos</text>
+  
+  <!-- Actores -->
+  <rect x="80" y="910" width="60" height="30" class="actor-box" rx="5"/>
+  <text x="110" y="930" text-anchor="middle" class="actor-text">Camera</text>
+  
+  <rect x="180" y="910" width="60" height="30" class="actor-box" rx="5"/>
+  <text x="210" y="930" text-anchor="middle" class="actor-text">LIDAR</text>
+  
+  <rect x="280" y="910" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="320" y="930" text-anchor="middle" class="actor-text">Lane Det.</text>
+  
+  <rect x="400" y="910" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="440" y="930" text-anchor="middle" class="actor-text">Object Det.</text>
+  
+  <rect x="520" y="910" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="560" y="930" text-anchor="middle" class="actor-text">Master</text>
+  
+  <rect x="640" y="910" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="680" y="930" text-anchor="middle" class="actor-text">Actuators</text>
+  
+  <!-- Líneas de vida -->
+  <line x1="110" y1="940" x2="110" y2="1290" class="lifeline"/>
+  <line x1="210" y1="940" x2="210" y2="1290" class="lifeline"/>
+  <line x1="320" y1="940" x2="320" y2="1290" class="lifeline"/>
+  <line x1="440" y1="940" x2="440" y2="1290" class="lifeline"/>
+  <line x1="560" y1="940" x2="560" y2="1290" class="lifeline"/>
+  <line x1="680" y1="940" x2="680" y2="1290" class="lifeline"/>
+  
+  <!-- Secuencia de mensajes -->
+  <line x1="110" y1="970" x2="320" y2="970" class="message-line"/>
+  <text x="215" y="965" class="label">image_raw</text>
+  
+  <line x1="210" y1="990" x2="440" y2="990" class="message-line"/>
+  <text x="325" y="985" class="label">scan</text>
+  
+  <rect x="315" y="975" width="10" height="40" class="activation"/>
+  <rect x="435" y="995" width="10" height="60" class="activation"/>
+  
+  <line x1="320" y1="1030" x2="560" y2="1030" class="message-line"/>
+  <text x="440" y="1025" class="label">distance_center</text>
+  
+  <line x1="440" y1="1070" x2="560" y2="1070" class="message-line"/>
+  <text x="500" y="1065" class="label">objects_detected</text>
+  
+  <rect x="555" y="1075" width="10" height="120" class="activation"/>
+  <text x="580" y="1090" class="small-label">Estado: FOLLOWING</text>
+  <text x="580" y="1105" class="small-label">Decisión: PASSING</text>
+  <text x="580" y="1120" class="small-label">Estado: MOVING_LEFT</text>
+  <text x="580" y="1135" class="small-label">Estado: PASSING</text>
+  <text x="580" y="1150" class="small-label">Estado: MOVING_RIGHT</text>
+  <text x="580" y="1165" class="small-label">Estado: LANE_DRIVING</text>
+  
+  <line x1="560" y1="1210" x2="680" y2="1210" class="message-line"/>
+  <text x="620" y="1205" class="label">cmd_vel (variable)</text>
+  
+  <rect x="675" y="1215" width="10" height="40" class="activation"/>
+  
+  <!-- Notas -->
+  <rect x="750" y="970" width="220" height="160" class="note" rx="5"/>
+  <text x="760" y="990" class="note-text">• Frecuencia: 30 Hz</text>
+  <text x="760" y="1005" class="note-text">• Latencia: 33-50ms</text>
+  <text x="760" y="1020" class="note-text">• Máquina de estados compleja</text>
+  <text x="760" y="1035" class="note-text">• Maniobras de adelantamiento</text>
+  <text x="760" y="1050" class="note-text">• Predicción de trayectorias</text>
+  <text x="760" y="1065" class="note-text">• Control adaptativo de velocidad</text>
+  <text x="760" y="1080" class="note-text">• Estados: LANE_DRIVING,</text>
+  <text x="760" y="1095" class="note-text">  FOLLOWING, MOVING_LEFT,</text>
+  <text x="760" y="1110" class="note-text">  PASSING, MOVING_RIGHT</text>
+
+  <!-- MODO 4: Estacionamiento -->
+  <rect x="50" y="1340" width="1100" height="220" class="mode-section" rx="10"/>
+  <text x="70" y="1365" class="subtitle">Modo 4: Estacionamiento Autónomo</text>
+  
+  <!-- Actores -->
+  <rect x="100" y="1380" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="140" y="1400" text-anchor="middle" class="actor-text">Lane Det.</text>
+  
+  <rect x="220" y="1380" width="100" height="30" class="actor-box" rx="5"/>
+  <text x="270" y="1400" text-anchor="middle" class="actor-text">Object Det. Park</text>
+  
+  <rect x="360" y="1380" width="100" height="30" class="actor-box" rx="5"/>
+  <text x="410" y="1400" text-anchor="middle" class="actor-text">Master Parking</text>
+  
+  <rect x="500" y="1380" width="80" height="30" class="actor-box" rx="5"/>
+  <text x="540" y="1400" text-anchor="middle" class="actor-text">Actuators</text>
+  
+  <!-- Líneas de vida -->
+  <line x1="140" y1="1410" x2="140" y2="1530" class="lifeline"/>
+  <line x1="270" y1="1410" x2="270" y2="1530" class="lifeline"/>
+  <line x1="410" y1="1410" x2="410" y2="1530" class="lifeline"/>
+  <line x1="540" y1="1410" x2="540" y2="1530" class="lifeline"/>
+  
+  <!-- Secuencia de mensajes -->
+  <line x1="270" y1="1440" x2="410" y2="1440" class="message-line"/>
+  <text x="340" y="1435" class="label">parking_spaces</text>
+  
+  <rect x="405" y="1445" width="10" height="60" class="activation"/>
+  <text x="430" y="1460" class="small-label">Cálculo de</text>
+  <text x="430" y="1475" class="small-label">trayectoria</text>
+  <text x="430" y="1490" class="small-label">de parking</text>
+  
+  <line x1="410" y1="1520" x2="540" y2="1520" class="message-line"/>
+  <text x="475" y="1515" class="label">precise_control</text>
+  
+  <!-- Notas -->
+  <rect x="620" y="1420" width="200" height="100" class="note" rx="5"/>
+  <text x="630" y="1440" class="note-text">• Frecuencia: 10 Hz</text>
+  <text x="630" y="1455" class="note-text">• Control de precisión</text>
+  <text x="630" y="1470" class="note-text">• Velocidad muy baja</text>
+  <text x="630" y="1485" class="note-text">• Maniobras complejas</text>
+  <text x="630" y="1500" class="note-text">• Detección de espacios libres</text>
+
+</svg>

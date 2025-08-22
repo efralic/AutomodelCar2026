@@ -1,0 +1,168 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 16px; fill: #34495e; }
+      .node-text { font-family: Arial, sans-serif; font-size: 12px; fill: #2c3e50; }
+      .small-text { font-family: Arial, sans-serif; font-size: 10px; fill: #7f8c8d; }
+      .sensor-box { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .processing-box { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .control-box { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+      .actuator-box { fill: #27ae60; stroke: #229954; stroke-width: 2; }
+      .sim-box { fill: #9b59b6; stroke: #8e44ad; stroke-width: 2; }
+      .arrow { stroke: #34495e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .data-flow { stroke: #e67e22; stroke-width: 2; fill: none; marker-end: url(#arrowhead); stroke-dasharray: 5,5; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34495e" />
+    </marker>
+  </defs>
+  
+  <!-- Título -->
+  <text x="600" y="30" text-anchor="middle" class="title">Arquitectura del Sistema AVIM</text>
+  <text x="600" y="55" text-anchor="middle" class="subtitle">Sistema Autónomo de Navegación para Vehículo Modelo</text>
+  
+  <!-- Capa de Sensores -->
+  <text x="50" y="100" class="subtitle">Sensores</text>
+  
+  <!-- Cámara RGB -->
+  <rect x="50" y="120" width="150" height="80" rx="10" class="sensor-box"/>
+  <text x="125" y="145" text-anchor="middle" class="node-text" fill="white">Cámara RGB</text>
+  <text x="125" y="165" text-anchor="middle" class="small-text" fill="white">• Captura de imágenes</text>
+  <text x="125" y="180" text-anchor="middle" class="small-text" fill="white">• /camera/image_raw</text>
+  <text x="125" y="195" text-anchor="middle" class="small-text" fill="white">• Resolución HD</text>
+  
+  <!-- Sensor LIDAR -->
+  <rect x="250" y="120" width="150" height="80" rx="10" class="sensor-box"/>
+  <text x="325" y="145" text-anchor="middle" class="node-text" fill="white">Sensor LIDAR</text>
+  <text x="325" y="165" text-anchor="middle" class="small-text" fill="white">• Datos de distancia</text>
+  <text x="325" y="180" text-anchor="middle" class="small-text" fill="white">• /scan</text>
+  <text x="325" y="195" text-anchor="middle" class="small-text" fill="white">• Rango: 0.2-4.25m</text>
+  
+  <!-- Simulador Gazebo -->
+  <rect x="450" y="120" width="150" height="80" rx="10" class="sim-box"/>
+  <text x="525" y="145" text-anchor="middle" class="node-text" fill="white">Simulador Gazebo</text>
+  <text x="525" y="165" text-anchor="middle" class="small-text" fill="white">• Entorno virtual</text>
+  <text x="525" y="180" text-anchor="middle" class="small-text" fill="white">• Física realista</text>
+  <text x="525" y="195" text-anchor="middle" class="small-text" fill="white">• Múltiples mundos</text>
+  
+  <!-- Capa de Procesamiento -->
+  <text x="50" y="280" class="subtitle">Procesamiento</text>
+  
+  <!-- Lane Detection -->
+  <rect x="50" y="300" width="180" height="100" rx="10" class="processing-box"/>
+  <text x="140" y="325" text-anchor="middle" class="node-text" fill="white">Lane Detection</text>
+  <text x="140" y="345" text-anchor="middle" class="small-text" fill="white">• Procesamiento OpenCV</text>
+  <text x="140" y="360" text-anchor="middle" class="small-text" fill="white">• Transformación perspectiva</text>
+  <text x="140" y="375" text-anchor="middle" class="small-text" fill="white">• Detección de líneas</text>
+  <text x="140" y="390" text-anchor="middle" class="small-text" fill="white">• /distance_center</text>
+  
+  <!-- Object Detection -->
+  <rect x="280" y="300" width="180" height="100" rx="10" class="processing-box"/>
+  <text x="370" y="325" text-anchor="middle" class="node-text" fill="white">Object Detection</text>
+  <text x="370" y="345" text-anchor="middle" class="small-text" fill="white">• Clustering DBSCAN</text>
+  <text x="370" y="360" text-anchor="middle" class="small-text" fill="white">• Filtrado de obstáculos</text>
+  <text x="370" y="375" text-anchor="middle" class="small-text" fill="white">• Cálculo de centroides</text>
+  <text x="370" y="390" text-anchor="middle" class="small-text" fill="white">• /objects_detected</text>
+  
+  <!-- Bring Up -->
+  <rect x="510" y="300" width="180" height="100" rx="10" class="sim-box"/>
+  <text x="600" y="325" text-anchor="middle" class="node-text" fill="white">Bring Up</text>
+  <text x="600" y="345" text-anchor="middle" class="small-text" fill="white">• Configuración inicial</text>
+  <text x="600" y="360" text-anchor="middle" class="small-text" fill="white">• Launch files</text>
+  <text x="600" y="375" text-anchor="middle" class="small-text" fill="white">• Mundos Gazebo</text>
+  <text x="600" y="390" text-anchor="middle" class="small-text" fill="white">• Inicialización</text>
+  
+  <!-- Capa de Control -->
+  <text x="50" y="480" class="subtitle">Control Inteligente</text>
+  
+  <!-- Master Control -->
+  <rect x="200" y="500" width="400" height="120" rx="10" class="control-box"/>
+  <text x="400" y="530" text-anchor="middle" class="node-text" fill="white" style="font-size: 16px;">Master Control</text>
+  <text x="280" y="555" text-anchor="middle" class="small-text" fill="white">• Fusión de sensores</text>
+  <text x="280" y="570" text-anchor="middle" class="small-text" fill="white">• Control PID</text>
+  <text x="280" y="585" text-anchor="middle" class="small-text" fill="white">• Gestión de tareas</text>
+  <text x="280" y="600" text-anchor="middle" class="small-text" fill="white">• Máquina de estados</text>
+  
+  <text x="520" y="555" text-anchor="middle" class="small-text" fill="white">• Algoritmos de evasión</text>
+  <text x="520" y="570" text-anchor="middle" class="small-text" fill="white">• Toma de decisiones</text>
+  <text x="520" y="585" text-anchor="middle" class="small-text" fill="white">• Planificación de rutas</text>
+  <text x="520" y="600" text-anchor="middle" class="small-text" fill="white">• Maniobras complejas</text>
+  
+  <!-- Capa de Actuadores -->
+  <text x="50" y="700" class="subtitle">Actuadores</text>
+  
+  <!-- Control de Velocidad -->
+  <rect x="150" y="720" width="150" height="60" rx="10" class="actuator-box"/>
+  <text x="225" y="745" text-anchor="middle" class="node-text" fill="white">Control Velocidad</text>
+  <text x="225" y="765" text-anchor="middle" class="small-text" fill="white">• /cmd_vel</text>
+  
+  <!-- Control de Dirección -->
+  <rect x="350" y="720" width="150" height="60" rx="10" class="actuator-box"/>
+  <text x="425" y="745" text-anchor="middle" class="node-text" fill="white">Control Dirección</text>
+  <text x="425" y="765" text-anchor="middle" class="small-text" fill="white">• /steering</text>
+  
+  <!-- Flechas de conexión -->
+  <!-- Sensores a Procesamiento -->
+  <line x1="125" y1="200" x2="140" y2="300" class="arrow"/>
+  <line x1="325" y1="200" x2="370" y2="300" class="arrow"/>
+  <line x1="525" y1="200" x2="600" y2="300" class="arrow"/>
+  
+  <!-- Procesamiento a Control -->
+  <line x1="140" y1="400" x2="300" y2="500" class="arrow"/>
+  <line x1="370" y1="400" x2="400" y2="500" class="arrow"/>
+  <line x1="600" y1="400" x2="500" y2="500" class="arrow"/>
+  
+  <!-- Control a Actuadores -->
+  <line x1="350" y1="620" x2="225" y2="720" class="arrow"/>
+  <line x1="450" y1="620" x2="425" y2="720" class="arrow"/>
+  
+  <!-- Flujos de datos específicos -->
+  <line x1="230" y1="350" x2="280" y2="350" class="data-flow"/>
+  <text x="255" y="345" text-anchor="middle" class="small-text">/distance_center</text>
+  
+  <line x1="460" y1="350" x2="510" y2="350" class="data-flow"/>
+  <text x="485" y="345" text-anchor="middle" class="small-text">/objects_detected</text>
+  
+  <!-- Leyenda -->
+  <rect x="750" y="120" width="400" height="300" rx="10" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2"/>
+  <text x="950" y="145" text-anchor="middle" class="subtitle">Leyenda de Componentes</text>
+  
+  <rect x="770" y="160" width="20" height="15" class="sensor-box"/>
+  <text x="800" y="172" class="small-text">Sensores - Captura de datos del entorno</text>
+  
+  <rect x="770" y="185" width="20" height="15" class="processing-box"/>
+  <text x="800" y="197" class="small-text">Procesamiento - Análisis e interpretación</text>
+  
+  <rect x="770" y="210" width="20" height="15" class="control-box"/>
+  <text x="800" y="222" class="small-text">Control - Toma de decisiones y planificación</text>
+  
+  <rect x="770" y="235" width="20" height="15" class="actuator-box"/>
+  <text x="800" y="247" class="small-text">Actuadores - Ejecución de comandos</text>
+  
+  <rect x="770" y="260" width="20" height="15" class="sim-box"/>
+  <text x="800" y="272" class="small-text">Simulación - Entorno virtual y configuración</text>
+  
+  <line x1="770" y1="290" x2="790" y2="290" class="arrow"/>
+  <text x="800" y="295" class="small-text">Flujo de control principal</text>
+  
+  <line x1="770" y1="310" x2="790" y2="310" class="data-flow"/>
+  <text x="800" y="315" class="small-text">Flujo de datos ROS</text>
+  
+  <!-- Modos de operación -->
+  <rect x="750" y="450" width="400" height="200" rx="10" fill="#f8f9fa" stroke="#bdc3c7" stroke-width="2"/>
+  <text x="950" y="475" text-anchor="middle" class="subtitle">Modos de Operación</text>
+  
+  <text x="770" y="500" class="small-text" style="font-weight: bold;">1. Sin Obstáculos:</text>
+  <text x="780" y="515" class="small-text">   • lane_detection + Master</text>
+  
+  <text x="770" y="535" class="small-text" style="font-weight: bold;">2. Obstáculos Estáticos:</text>
+  <text x="780" y="550" class="small-text">   • lane_detection + object_detection + Master_static</text>
+  
+  <text x="770" y="570" class="small-text" style="font-weight: bold;">3. Obstáculos Dinámicos:</text>
+  <text x="780" y="585" class="small-text">   • lane_detection + object_detection + Master</text>
+  
+  <text x="770" y="605" class="small-text" style="font-weight: bold;">4. Estacionamiento:</text>
+  <text x="780" y="620" class="small-text">   • lane_detection + object_detection_parking + Master_parking</text>
+  
+</svg>
