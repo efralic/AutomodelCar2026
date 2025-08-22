@@ -1,233 +1,184 @@
-<svg width="1400" height="900" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <style>
+    .title { font-family: Arial; font-size: 18px; font-weight: bold; fill: #2c3e50; }
+    .subtitle { font-family: Arial; font-size: 12px; fill: #34495e; }
+    .node-text { font-family: Arial; font-size: 10px; fill: white; font-weight: bold; }
+    .topic-text { font-family: Arial; font-size: 8px; fill: #e74c3c; font-weight: bold; }
+    .small-text { font-family: Arial; font-size: 7px; fill: #7f8c8d; }
+    .sensor { fill: #9b59b6; stroke: #8e44ad; stroke-width: 2; }
+    .process { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+    .master { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+    .topic { fill: #ecf0f1; stroke: #bdc3c7; stroke-width: 1; }
+    .actuator { fill: #27ae60; stroke: #229954; stroke-width: 2; }
+    .arrow { stroke: #34495e; stroke-width: 2; fill: none; }
+  </style>
+  
   <defs>
-    <style>
-      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
-      .subtitle { font-family: Arial, sans-serif; font-size: 16px; fill: #34495e; }
-      .node-text { font-family: Arial, sans-serif; font-size: 14px; fill: #2c3e50; font-weight: bold; }
-      .topic-text { font-family: Arial, sans-serif; font-size: 11px; fill: #e74c3c; font-weight: bold; }
-      .small-text { font-family: Arial, sans-serif; font-size: 10px; fill: #7f8c8d; }
-      .node-box { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
-      .master-box { fill: #f39c12; stroke: #e67e22; stroke-width: 3; }
-      .topic-box { fill: #ecf0f1; stroke: #bdc3c7; stroke-width: 1; }
-      .data-arrow { stroke: #e74c3c; stroke-width: 3; fill: none; marker-end: url(#arrowhead-red); }
-      .control-arrow { stroke: #27ae60; stroke-width: 3; fill: none; marker-end: url(#arrowhead-green); }
-      .sensor-arrow { stroke: #9b59b6; stroke-width: 2; fill: none; marker-end: url(#arrowhead-purple); }
-    </style>
-    <marker id="arrowhead-red" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
-      <polygon points="0 0, 12 4, 0 8" fill="#e74c3c" />
-    </marker>
-    <marker id="arrowhead-green" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
-      <polygon points="0 0, 12 4, 0 8" fill="#27ae60" />
-    </marker>
-    <marker id="arrowhead-purple" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
-      <polygon points="0 0, 12 4, 0 8" fill="#9b59b6" />
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#34495e"/>
     </marker>
   </defs>
   
   <!-- Título -->
-  <text x="700" y="30" text-anchor="middle" class="title">Diagrama de Flujo de Datos ROS - Sistema AVIM</text>
-  <text x="700" y="55" text-anchor="middle" class="subtitle">Comunicación entre Nodos y Tópicos</text>
+  <text x="400" y="25" text-anchor="middle" class="title">Diagrama de Flujo de Datos ROS - Sistema AVIM</text>
   
-  <!-- Sensores de entrada -->
-  <text x="50" y="100" class="subtitle">Sensores de Entrada</text>
+  <!-- Sensores -->
+  <text x="50" y="60" class="subtitle">Sensores</text>
   
-  <!-- Cámara -->
-  <rect x="50" y="120" width="120" height="60" rx="8" fill="#9b59b6" stroke="#8e44ad" stroke-width="2"/>
-  <text x="110" y="140" text-anchor="middle" class="node-text" fill="white">Cámara</text>
-  <text x="110" y="155" text-anchor="middle" class="small-text" fill="white">RGB Camera</text>
-  <text x="110" y="170" text-anchor="middle" class="small-text" fill="white">Gazebo Plugin</text>
+  <rect x="50" y="70" width="70" height="35" rx="5" class="sensor"/>
+  <text x="85" y="92" text-anchor="middle" class="node-text">Cámara RGB</text>
   
-  <!-- LIDAR -->
-  <rect x="50" y="200" width="120" height="60" rx="8" fill="#9b59b6" stroke="#8e44ad" stroke-width="2"/>
-  <text x="110" y="220" text-anchor="middle" class="node-text" fill="white">LIDAR</text>
-  <text x="110" y="235" text-anchor="middle" class="small-text" fill="white">Laser Scanner</text>
-  <text x="110" y="250" text-anchor="middle" class="small-text" fill="white">360° Range</text>
+  <rect x="50" y="115" width="70" height="35" rx="5" class="sensor"/>
+  <text x="85" y="137" text-anchor="middle" class="node-text">LIDAR</text>
   
-  <!-- Tópicos de sensores -->
-  <rect x="220" y="120" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="295" y="140" text-anchor="middle" class="topic-text">/camera/image_raw</text>
+  <!-- Tópicos de entrada -->
+  <rect x="140" y="75" width="100" height="18" rx="3" class="topic"/>
+  <text x="190" y="87" text-anchor="middle" class="topic-text">/camera/image_raw</text>
   
-  <rect x="220" y="200" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="295" y="220" text-anchor="middle" class="topic-text">/scan</text>
+  <rect x="140" y="120" width="60" height="18" rx="3" class="topic"/>
+  <text x="170" y="132" text-anchor="middle" class="topic-text">/scan</text>
   
   <!-- Nodos de procesamiento -->
-  <text x="450" y="100" class="subtitle">Nodos de Procesamiento</text>
+  <text x="270" y="60" class="subtitle">Procesamiento</text>
   
-  <!-- Lane Detection -->
-  <rect x="450" y="120" width="160" height="80" rx="8" class="node-box"/>
-  <text x="530" y="145" text-anchor="middle" class="node-text" fill="white">lane_detection</text>
-  <text x="530" y="165" text-anchor="middle" class="small-text" fill="white">• Procesamiento OpenCV</text>
-  <text x="530" y="180" text-anchor="middle" class="small-text" fill="white">• Transformación perspectiva</text>
-  <text x="530" y="195" text-anchor="middle" class="small-text" fill="white">• Detección de líneas</text>
+  <rect x="270" y="70" width="80" height="35" rx="5" class="process"/>
+  <text x="310" y="92" text-anchor="middle" class="node-text">lane_detection</text>
   
-  <!-- Object Detection -->
-  <rect x="450" y="220" width="160" height="80" rx="8" class="node-box"/>
-  <text x="530" y="245" text-anchor="middle" class="node-text" fill="white">object_detection</text>
-  <text x="530" y="265" text-anchor="middle" class="small-text" fill="white">• Clustering DBSCAN</text>
-  <text x="530" y="280" text-anchor="middle" class="small-text" fill="white">• Filtrado obstáculos</text>
-  <text x="530" y="295" text-anchor="middle" class="small-text" fill="white">• Cálculo centroides</text>
+  <rect x="270" y="115" width="80" height="35" rx="5" class="process"/>
+  <text x="310" y="137" text-anchor="middle" class="node-text">object_detection</text>
   
-  <!-- Object Detection Parking -->
-  <rect x="450" y="320" width="160" height="80" rx="8" class="node-box"/>
-  <text x="530" y="345" text-anchor="middle" class="node-text" fill="white">object_detection</text>
-  <text x="530" y="360" text-anchor="middle" class="node-text" fill="white">_parking</text>
-  <text x="530" y="380" text-anchor="middle" class="small-text" fill="white">• Detección espacios</text>
-  <text x="530" y="395" text-anchor="middle" class="small-text" fill="white">• Maniobras parking</text>
+  <rect x="270" y="160" width="80" height="35" rx="5" class="process"/>
+  <text x="310" y="177" text-anchor="middle" class="node-text">object_detection</text>
+  <text x="310" y="187" text-anchor="middle" class="small-text">_parking</text>
   
   <!-- Tópicos de procesamiento -->
-  <rect x="670" y="120" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="745" y="140" text-anchor="middle" class="topic-text">/distance_center</text>
+  <rect x="370" y="75" width="80" height="18" rx="3" class="topic"/>
+  <text x="410" y="87" text-anchor="middle" class="topic-text">/distance_center</text>
   
-  <rect x="670" y="160" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="745" y="180" text-anchor="middle" class="topic-text">/angle_line</text>
+  <rect x="370" y="100" width="60" height="18" rx="3" class="topic"/>
+  <text x="400" y="112" text-anchor="middle" class="topic-text">/angle_line</text>
   
-  <rect x="670" y="220" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="745" y="240" text-anchor="middle" class="topic-text">/objects_detected</text>
+  <rect x="370" y="120" width="80" height="18" rx="3" class="topic"/>
+  <text x="410" y="132" text-anchor="middle" class="topic-text">/objects_detected</text>
   
-  <rect x="670" y="320" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="745" y="340" text-anchor="middle" class="topic-text">/parking_objects</text>
+  <rect x="370" y="165" width="80" height="18" rx="3" class="topic"/>
+  <text x="410" y="177" text-anchor="middle" class="topic-text">/parking_objects</text>
   
   <!-- Nodos Master -->
-  <text x="900" y="100" class="subtitle">Nodos de Control</text>
+  <text x="480" y="60" class="subtitle">Control Master</text>
   
-  <!-- Master -->
-  <rect x="900" y="120" width="180" height="100" rx="8" class="master-box"/>
-  <text x="990" y="150" text-anchor="middle" class="node-text" fill="white">Master</text>
-  <text x="990" y="170" text-anchor="middle" class="small-text" fill="white">• Control dinámico</text>
-  <text x="990" y="185" text-anchor="middle" class="small-text" fill="white">• Evasión obstáculos</text>
-  <text x="990" y="200" text-anchor="middle" class="small-text" fill="white">• PID Control</text>
-  <text x="990" y="215" text-anchor="middle" class="small-text" fill="white">• Gestión tareas</text>
+  <rect x="480" y="70" width="70" height="40" rx="5" class="master"/>
+  <text x="515" y="87" text-anchor="middle" class="node-text">Master</text>
+  <text x="515" y="97" text-anchor="middle" class="small-text">Dinámico</text>
+  <text x="515" y="105" text-anchor="middle" class="small-text">PID</text>
   
-  <!-- Master Static -->
-  <rect x="900" y="240" width="180" height="100" rx="8" class="master-box"/>
-  <text x="990" y="270" text-anchor="middle" class="node-text" fill="white">Master_static</text>
-  <text x="990" y="290" text-anchor="middle" class="small-text" fill="white">• Control estático</text>
-  <text x="990" y="305" text-anchor="middle" class="small-text" fill="white">• Obstáculos fijos</text>
-  <text x="990" y="320" text-anchor="middle" class="small-text" fill="white">• Planificación rutas</text>
-  <text x="990" y="335" text-anchor="middle" class="small-text" fill="white">• Algoritmos A*</text>
+  <rect x="480" y="120" width="70" height="40" rx="5" class="master"/>
+  <text x="515" y="137" text-anchor="middle" class="node-text">Master_static</text>
+  <text x="515" y="147" text-anchor="middle" class="small-text">A* Planning</text>
   
-  <!-- Master Parking -->
-  <rect x="900" y="360" width="180" height="100" rx="8" class="master-box"/>
-  <text x="990" y="390" text-anchor="middle" class="node-text" fill="white">Master_parking</text>
-  <text x="990" y="410" text-anchor="middle" class="small-text" fill="white">• Control parking</text>
-  <text x="990" y="425" text-anchor="middle" class="small-text" fill="white">• Maniobras precisas</text>
-  <text x="990" y="440" text-anchor="middle" class="small-text" fill="white">• Espacios reducidos</text>
-  <text x="990" y="455" text-anchor="middle" class="small-text" fill="white">• Control fino</text>
+  <rect x="480" y="170" width="70" height="40" rx="5" class="master"/>
+  <text x="515" y="187" text-anchor="middle" class="node-text">Master_parking</text>
+  <text x="515" y="197" text-anchor="middle" class="small-text">Precisión</text>
   
-  <!-- Tópicos de salida -->
-  <text x="1150" y="100" class="subtitle">Comandos de Salida</text>
+  <!-- Comandos de salida -->
+  <text x="580" y="60" class="subtitle">Comandos</text>
   
-  <rect x="1150" y="200" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="1225" y="220" text-anchor="middle" class="topic-text">/cmd_vel</text>
+  <rect x="580" y="85" width="60" height="18" rx="3" class="topic"/>
+  <text x="610" y="97" text-anchor="middle" class="topic-text">/cmd_vel</text>
   
-  <rect x="1150" y="250" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="1225" y="270" text-anchor="middle" class="topic-text">/steering</text>
+  <rect x="580" y="110" width="60" height="18" rx="3" class="topic"/>
+  <text x="610" y="122" text-anchor="middle" class="topic-text">/steering</text>
   
-  <rect x="1150" y="300" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="1225" y="320" text-anchor="middle" class="topic-text">/speed_control</text>
+  <rect x="580" y="135" width="70" height="18" rx="3" class="topic"/>
+  <text x="615" y="147" text-anchor="middle" class="topic-text">/speed_control</text>
   
-  <rect x="1150" y="350" width="150" height="30" rx="5" class="topic-box"/>
-  <text x="1225" y="370" text-anchor="middle" class="topic-text">/angle_control</text>
+  <rect x="580" y="160" width="70" height="18" rx="3" class="topic"/>
+  <text x="615" y="172" text-anchor="middle" class="topic-text">/angle_control</text>
   
   <!-- Actuadores -->
-  <rect x="1150" y="420" width="120" height="60" rx="8" fill="#27ae60" stroke="#229954" stroke-width="2"/>
-  <text x="1210" y="440" text-anchor="middle" class="node-text" fill="white">Actuadores</text>
-  <text x="1210" y="455" text-anchor="middle" class="small-text" fill="white">Vehículo</text>
-  <text x="1210" y="470" text-anchor="middle" class="small-text" fill="white">Gazebo</text>
+  <rect x="680" y="115" width="70" height="40" rx="5" class="actuator"/>
+  <text x="715" y="132" text-anchor="middle" class="node-text">Actuadores</text>
+  <text x="715" y="142" text-anchor="middle" class="small-text">Vehículo</text>
   
-  <!-- Conexiones de sensores -->
-  <line x1="170" y1="150" x2="220" y2="135" class="sensor-arrow"/>
-  <line x1="170" y1="230" x2="220" y2="215" class="sensor-arrow"/>
+  <!-- Conexiones principales -->
+  <line x1="120" y1="87" x2="140" y2="84" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="120" y1="132" x2="140" y2="129" class="arrow" marker-end="url(#arrow)"/>
   
-  <!-- Conexiones a procesamiento -->
-  <line x1="370" y1="135" x2="450" y2="160" class="data-arrow"/>
-  <line x1="370" y1="215" x2="450" y2="260" class="data-arrow"/>
-  <line x1="370" y1="215" x2="450" y2="360" class="data-arrow"/>
+  <line x1="240" y1="84" x2="270" y2="87" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="200" y1="129" x2="270" y2="132" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="200" y1="129" x2="270" y2="177" class="arrow" marker-end="url(#arrow)"/>
   
-  <!-- Conexiones de procesamiento a tópicos -->
-  <line x1="610" y1="135" x2="670" y2="135" class="data-arrow"/>
-  <line x1="610" y1="175" x2="670" y2="175" class="data-arrow"/>
-  <line x1="610" y1="235" x2="670" y2="235" class="data-arrow"/>
-  <line x1="610" y1="335" x2="670" y2="335" class="data-arrow"/>
+  <line x1="350" y1="87" x2="370" y2="84" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="350" y1="87" x2="370" y2="109" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="350" y1="132" x2="370" y2="129" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="350" y1="177" x2="370" y2="174" class="arrow" marker-end="url(#arrow)"/>
   
-  <!-- Conexiones a Masters -->
-  <line x1="820" y1="135" x2="900" y2="170" class="data-arrow"/>
-  <line x1="820" y1="175" x2="900" y2="170" class="data-arrow"/>
-  <line x1="820" y1="235" x2="900" y2="170" class="data-arrow"/>
-  <line x1="820" y1="235" x2="900" y2="290" class="data-arrow"/>
-  <line x1="820" y1="335" x2="900" y2="410" class="data-arrow"/>
+  <line x1="450" y1="84" x2="480" y2="90" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="430" y1="109" x2="480" y2="90" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="450" y1="129" x2="480" y2="140" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="450" y1="174" x2="480" y2="190" class="arrow" marker-end="url(#arrow)"/>
   
-  <!-- Conexiones de Masters a comandos -->
-  <line x1="1080" y1="170" x2="1150" y2="215" class="control-arrow"/>
-  <line x1="1080" y1="170" x2="1150" y2="265" class="control-arrow"/>
-  <line x1="1080" y1="290" x2="1150" y2="315" class="control-arrow"/>
-  <line x1="1080" y1="410" x2="1150" y2="365" class="control-arrow"/>
+  <line x1="550" y1="90" x2="580" y2="94" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="550" y1="90" x2="580" y2="119" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="550" y1="140" x2="580" y2="144" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="550" y1="190" x2="580" y2="169" class="arrow" marker-end="url(#arrow)"/>
   
-  <!-- Conexiones a actuadores -->
-  <line x1="1225" y1="230" x2="1210" y2="420" class="control-arrow"/>
-  <line x1="1225" y1="280" x2="1210" y2="420" class="control-arrow"/>
-  <line x1="1225" y1="330" x2="1210" y2="420" class="control-arrow"/>
-  <line x1="1225" y1="380" x2="1210" y2="420" class="control-arrow"/>
+  <line x1="640" y1="94" x2="680" y2="135" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="640" y1="119" x2="680" y2="135" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="650" y1="144" x2="680" y2="135" class="arrow" marker-end="url(#arrow)"/>
+  <line x1="650" y1="169" x2="680" y2="135" class="arrow" marker-end="url(#arrow)"/>
   
   <!-- Información de modos -->
-  <rect x="50" y="520" width="1300" height="320" rx="10" fill="#f8f9fa" stroke="#bdc3c7" stroke-width="2"/>
-  <text x="700" y="550" text-anchor="middle" class="subtitle">Configuraciones por Modo de Operación</text>
+  <rect x="50" y="230" width="700" height="340" rx="10" fill="#f8f9fa" stroke="#bdc3c7" stroke-width="2"/>
+  <text x="400" y="250" text-anchor="middle" class="subtitle">Configuraciones por Modo de Operación</text>
   
   <!-- Modo 1 -->
-  <rect x="80" y="580" width="280" height="120" rx="8" fill="#e8f5e8" stroke="#27ae60" stroke-width="2"/>
-  <text x="220" y="605" text-anchor="middle" class="node-text">Modo 1: Sin Obstáculos</text>
-  <text x="90" y="625" class="small-text">Nodos activos:</text>
-  <text x="100" y="645" class="small-text">• lane_detection</text>
-  <text x="100" y="660" class="small-text">• Master</text>
-  <text x="90" y="680" class="small-text">Tópicos principales:</text>
-  <text x="100" y="695" class="small-text">• /camera/image_raw → /distance_center → /cmd_vel</text>
+  <rect x="70" y="270" width="150" height="70" rx="5" fill="#e8f5e8" stroke="#27ae60" stroke-width="2"/>
+  <text x="145" y="285" text-anchor="middle" class="node-text" fill="#27ae60">Modo 1: Sin Obstáculos</text>
+  <text x="80" y="300" class="small-text">Nodos: lane_detection + Master</text>
+  <text x="80" y="315" class="small-text">Flujo: Cámara → Detección líneas → Control</text>
+  <text x="80" y="330" class="small-text">Frecuencia: 30 Hz</text>
   
   <!-- Modo 2 -->
-  <rect x="380" y="580" width="280" height="120" rx="8" fill="#fff3cd" stroke="#f39c12" stroke-width="2"/>
-  <text x="520" y="605" text-anchor="middle" class="node-text">Modo 2: Obstáculos Estáticos</text>
-  <text x="390" y="625" class="small-text">Nodos activos:</text>
-  <text x="400" y="645" class="small-text">• lane_detection + object_detection</text>
-  <text x="400" y="660" class="small-text">• Master_static</text>
-  <text x="390" y="680" class="small-text">Tópicos adicionales:</text>
-  <text x="400" y="695" class="small-text">• /scan → /objects_detected → planificación</text>
+  <rect x="240" y="270" width="150" height="70" rx="5" fill="#fff3cd" stroke="#f39c12" stroke-width="2"/>
+  <text x="315" y="285" text-anchor="middle" class="node-text" fill="#f39c12">Modo 2: Obstáculos Estáticos</text>
+  <text x="250" y="300" class="small-text">Nodos: lane_detection + object_detection</text>
+  <text x="250" y="315" class="small-text">+ Master_static</text>
+  <text x="250" y="330" class="small-text">Planificación: A*</text>
   
   <!-- Modo 3 -->
-  <rect x="680" y="580" width="280" height="120" rx="8" fill="#f8d7da" stroke="#e74c3c" stroke-width="2"/>
-  <text x="820" y="605" text-anchor="middle" class="node-text">Modo 3: Obstáculos Dinámicos</text>
-  <text x="690" y="625" class="small-text">Nodos activos:</text>
-  <text x="700" y="645" class="small-text">• lane_detection + object_detection</text>
-  <text x="700" y="660" class="small-text">• Master (dinámico)</text>
-  <text x="690" y="680" class="small-text">Características:</text>
-  <text x="700" y="695" class="small-text">• Evasión en tiempo real + seguimiento</text>
+  <rect x="410" y="270" width="150" height="70" rx="5" fill="#f8d7da" stroke="#e74c3c" stroke-width="2"/>
+  <text x="485" y="285" text-anchor="middle" class="node-text" fill="#e74c3c">Modo 3: Obstáculos Dinámicos</text>
+  <text x="420" y="300" class="small-text">Nodos: lane_detection + object_detection</text>
+  <text x="420" y="315" class="small-text">+ Master (dinámico)</text>
+  <text x="420" y="330" class="small-text">Evasión en tiempo real</text>
   
   <!-- Modo 4 -->
-  <rect x="980" y="580" width="280" height="120" rx="8" fill="#e2e3f3" stroke="#9b59b6" stroke-width="2"/>
-  <text x="1120" y="605" text-anchor="middle" class="node-text">Modo 4: Estacionamiento</text>
-  <text x="990" y="625" class="small-text">Nodos activos:</text>
-  <text x="1000" y="645" class="small-text">• lane_detection + object_detection_parking</text>
-  <text x="1000" y="660" class="small-text">• Master_parking</text>
-  <text x="990" y="680" class="small-text">Especialización:</text>
-  <text x="1000" y="695" class="small-text">• Control fino + maniobras precisas</text>
+  <rect x="580" y="270" width="150" height="70" rx="5" fill="#e2e3f3" stroke="#9b59b6" stroke-width="2"/>
+  <text x="655" y="285" text-anchor="middle" class="node-text" fill="#9b59b6">Modo 4: Parking</text>
+  <text x="590" y="300" class="small-text">Nodos: lane_detection +</text>
+  <text x="590" y="315" class="small-text">object_detection_parking</text>
+  <text x="590" y="330" class="small-text">+ Master_parking</text>
   
-  <!-- Frecuencias y rendimiento -->
-  <rect x="80" y="720" width="1180" height="100" rx="8" fill="#f0f0f0" stroke="#bdc3c7" stroke-width="1"/>
-  <text x="670" y="745" text-anchor="middle" class="subtitle">Información de Rendimiento</text>
+  <!-- Rendimiento -->
+  <rect x="70" y="360" width="660" height="190" rx="5" fill="#f0f0f0" stroke="#bdc3c7" stroke-width="1"/>
+  <text x="400" y="380" text-anchor="middle" class="subtitle">Información de Rendimiento y Comunicación</text>
   
-  <text x="100" y="770" class="small-text"><tspan style="font-weight: bold;">Frecuencias de publicación:</tspan></text>
-  <text x="120" y="785" class="small-text">• /camera/image_raw: 30 Hz | /scan: 10 Hz | /distance_center: 30 Hz | /objects_detected: 10 Hz</text>
+  <text x="90" y="400" class="small-text" font-weight="bold">Frecuencias de Publicación:</text>
+  <text x="110" y="415" class="small-text">• /camera/image_raw: 30 Hz</text>
+  <text x="110" y="430" class="small-text">• /scan: 10 Hz</text>
+  <text x="110" y="445" class="small-text">• /distance_center: 30 Hz</text>
+  <text x="110" y="460" class="small-text">• /objects_detected: 10 Hz</text>
   
-  <text x="100" y="805" class="small-text"><tspan style="font-weight: bold;">Latencias típicas:</tspan></text>
-  <text x="120" y="820" class="small-text">• Procesamiento imagen: ~33ms | Detección obstáculos: ~100ms | Control total: <150ms</text>
+  <text x="350" y="400" class="small-text" font-weight="bold">Latencias Típicas:</text>
+  <text x="370" y="415" class="small-text">• Procesamiento imagen: ~33ms</text>
+  <text x="370" y="430" class="small-text">• Detección obstáculos: ~100ms</text>
+  <text x="370" y="445" class="small-text">• Control total: &lt;150ms</text>
   
-  <!-- Leyenda -->
-  <rect x="50" y="860" width="1300" height="30" rx="5" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
-  <line x1="80" y1="875" x2="120" y2="875" class="sensor-arrow"/>
-  <text x="130" y="880" class="small-text">Datos de sensores</text>
-  
-  <line x1="280" y1="875" x2="320" y2="875" class="data-arrow"/>
-  <text x="330" y="880" class="small-text">Flujo de procesamiento</text>
-  
-  <line x1="480" y1="875" x2="520" y2="875" class="control-arrow"/>
-  <text x="530" y="880" class="small-text">Comandos de control</text>
+  <text x="90" y="480" class="small-text" font-weight="bold">Configuración de Launch Files:</text>
+  <text x="110" y="495" class="small-text">• Modo 1: roslaunch bring_up autonomos_mode1.launch</text>
+  <text x="110" y="510" class="small-text">• Modo 2: roslaunch bring_up autonomos_mode2.launch</text>
+  <text x="110" y="525" class="small-text">• Modo 3: roslaunch bring_up autonomos_mode3.launch</text>
+  <text x="110" y="540" class="small-text">• Modo 4: roslaunch bring_up autonomos_mode4.launch</text>
   
 </svg>
