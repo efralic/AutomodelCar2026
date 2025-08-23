@@ -344,7 +344,7 @@ GitHub: [JoseBalbuena181096](https://github.com/JoseBalbuena181096?tab=repositor
 ## Video Demostración
 
 🎥 **Video del Sistema en Funcionamiento**  
-[Ver demostración del sistema AVIM](https://studio.youtube.com/video/6PzdKpFz6kk)
+[Ver demostración del sistema AVIM](https://youtu.be/6PzdKpFz6kk)
 
 ---
 
