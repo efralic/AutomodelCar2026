@@ -1,6 +1,6 @@
-# Documentación Completa del Proyecto AVIM
+# Documentación Completa Torneo Mexicano de Robótica 2021 Automodelcar
 
-## Sistema Autónomo de Navegación para Vehículo Autónomo
+## Sistema Autónomo de Navegación para Vehículo Autónomo 
 
 ### Tabla de Contenidos
 
