@@ -19,8 +19,6 @@
 
 El proyecto AVIM (Autonomous Vehicle Intelligent Management) es un sistema completo de navegación autónoma desarrollado para vehículos modelo utilizando ROS (Robot Operating System). El sistema está diseñado para operar en diferentes escenarios de navegación, desde carreteras sin obstáculos hasta entornos complejos con obstáculos estáticos y dinámicos.
 
-🏆 **Este proyecto obtuvo el primer lugar en la categoría AutoModelCar del Torneo Mexicano de Robótica edición 2021**, una competencia de vehículos autónomos a escala que desafía a los equipos a desarrollar sistemas de navegación inteligente y eficiente.
-
 ### Características Principales
 
 - **Detección de carriles** mediante procesamiento de imágenes
@@ -334,18 +332,4 @@ roslaunch AVIM <modo_navegacion>.launch
 
 ---
 
-## Autor
 
-**José Angel Balbuena Palma**  
-GitHub: [JoseBalbuena181096](https://github.com/JoseBalbuena181096?tab=repositories)
-
----
-
-## Video Demostración
-
-🎥 **Video del Sistema en Funcionamiento**  
-[Ver demostración del sistema AVIM](https://youtu.be/6PzdKpFz6kk)
-
----
-
-**Equipo AVIM - Sistema de Navegación Autónoma**
