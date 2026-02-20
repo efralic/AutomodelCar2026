@@ -9,7 +9,7 @@
         <arg name="debug" value="false"/>
 
         <!-- INCLUDE THE CURVED ROAD WORLD -->
-        <arg name="world_name" value="straight_road.world"/>
+        <arg name="world_name" value="empty_straight_road.world"/>
     
         <!-- more default parameters can be changed here -->
     </include>
