@@ -1,0 +1,79 @@
+<launch>
+  <!-- 
+    TMR 2026 - Main Launch File
+    Updated for Raspberry Pi 4 with all new features
+  -->
+  
+  <!-- Arguments -->
+  <arg name="use_yolo_stop" default="false" doc="Use YOLO for STOP detection (requires trained model)"/>
+  <arg name="enable_teleop" default="true" doc="Enable teleoperation with joystick"/>
+  <arg name="enable_debug_images" default="true" doc="Publish debug images"/>
+  
+  <!-- Hardware Interface Nodes -->
+  <group ns="hardware">
+    <!-- Motor Driver -->
+    <node name="motor_driver" pkg="hardware_interface" type="motor_driver.py" output="screen" respawn="true"/>
+    
+    <!-- Lights Controller -->
+    <node name="lights_controller" pkg="hardware_interface" type="lights_controller.py" output="screen" respawn="true"/>
+    
+    <!-- Ultrasonic Sensors -->
+    <node name="ultrasonic_sensors" pkg="hardware_interface" type="ultrasonic_sensors.py" output="screen" respawn="true"/>
+  </group>
+  
+  <!-- Vision Nodes -->
+  <group ns="vision">
+    <!-- Lane Detection -->
+    <node name="lane_detection" pkg="lane_detection" type="lane_detection" output="screen" respawn="true">
+      <param name="debug_output" value="$(arg enable_debug_images)"/>
+    </node>
+    
+    <!-- STOP Sign Detector -->
+    <node name="stop_sign_detector" pkg="lane_detection" type="stop_sign_detector.py" output="screen" respawn="true">
+      <param name="use_yolo" value="$(arg use_yolo_stop)"/>
+      <param name="debug_output" value="$(arg enable_debug_images)"/>
+    </node>
+    
+    <!-- Object Detection (LIDAR) -->
+    <node name="object_detection" pkg="object_detection" type="object_detection" output="screen" respawn="true"/>
+  </group>
+  
+  <!-- Control Node -->
+  <node name="Master" pkg="control" type="Master" output="screen" respawn="true"/>
+  
+  <!-- Teleop (if enabled) -->
+  <group if="$(arg enable_teleop)">
+    <!-- Joy node for gamepad -->
+    <node name="joy_node" pkg="joy" type="joy_node" output="screen">
+      <param name="dev" value="/dev/input/js0"/>
+      <param name="deadzone" value="0.1"/>
+      <param name="autorepeat_rate" value="20"/>
+    </node>
+    
+    <!-- Teleop controller -->
+    <node name="teleop_controller" pkg="hardware_interface" type="teleop_controller.py" output="screen"/>
+  </group>
+  
+  <!-- Camera Driver (Raspberry Pi Camera v2) -->
+  <node name="raspicam_node" pkg="raspicam_node" type="raspicam_node" output="screen">
+    <param name="camera_frame_id" value="camera"/>
+    <param name="camera_info_url" value="package://raspicam_node/camera_info/camerav2_1280x960.yaml"/>
+    <param name="width" value="640"/>
+    <param name="height" value="480"/>
+    <param name="framerate" value="30"/>
+  </node>
+  
+  <!-- LIDAR Driver (RPLidar A1) -->
+  <node name="rplidar_node" pkg="rplidar_ros" type="rplidarNode" output="screen">
+    <param name="serial_port" type="string" value="/dev/ttyUSB0"/>
+    <param name="serial_baudrate" type="int" value="115200"/>
+    <param name="frame_id" type="string" value="laser"/>
+    <param name="inverted" type="bool" value="false"/>
+    <param name="angle_compensate" type="bool" value="true"/>
+  </node>
+  
+  <!-- RViz for visualization (optional) -->
+  <!-- Uncomment if running on laptop with display -->
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find AVIM)/rviz/tmr2026.rviz"/> -->
+  
+</launch>
