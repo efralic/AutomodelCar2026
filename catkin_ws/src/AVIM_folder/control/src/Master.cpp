@@ -9,6 +9,7 @@
 #include<map>
 #include <chrono>
 #include <thread>
+#include <std_msgs/Bool.h>  // Para mensajes Bool de luces y STOP
 
 int LANE_DRIVING = 0;
 int FOLLOWING = 1;
@@ -81,7 +82,9 @@ class Master{
         int vel_decreasing_factor;
         int mid_speed;
 		bool stop_sign_detected;
+		bool stop_initiated;
         std::chrono::steady_clock::time_point start;
+		std::chrono::steady_clock::time_point stop_start_time;
         std::chrono::steady_clock::time_point end;
    
     public:
@@ -115,6 +118,7 @@ class Master{
             max_waiting_time = MAX_WAIT_TIME; 
             passing_enabled = PASSING_ENABLED;
 			stop_sign_detected = false;
+			stop_initiated = false;
             this->add_task(task);
         }
 
@@ -164,6 +168,7 @@ class Master{
 
         void task_assigner(void){
 			// NUEVO: Prioridad máxima para STOP sign
+			Task current_task = get_current_task();
     		if (stop_sign_detected && get_current_task().ID == LANE_DRIVING) {
         		this->add_task(Task(STOP_AT_SIGN));
         		stop_sign_detected = false;  // Reset flag
@@ -205,10 +210,7 @@ class Master{
             ROS_INFO_STREAM("[Current task]: " <<current_task.name);
 
 			// NUEVO: Manejo de STOP sign
-    		if (current_task.ID == STOP_AT_SIGN) {
-        		static auto stop_start_time = std::chrono::steady_clock::now();
-        		static bool stop_initiated = false;
-        
+    		if (current_task.ID == STOP_AT_SIGN) {        
         		if (!stop_initiated) {
             		// Primera vez en este estado
             		stop_initiated = true;
@@ -305,9 +307,14 @@ class Master{
             }
             else if (current_task.ID == MOVING_LEFT){
 				// NUEVO: Activar señal izquierda
-    			std_msgs::Bool signal_msg;
-    			signal_msg.data = true;
-    			left_signal_pub.publish(signal_msg);
+    			static bool signal_activated = false;
+    			if (!signal_activated) {
+        			std_msgs::Bool signal_msg;
+        			signal_msg.data = true;
+        			left_signal_pub.publish(signal_msg);
+        			signal_activated = true;
+        			ROS_INFO("← Left signal ON");
+    			}
                 for (auto obstacle : this->found_objects){
                     if ((obstacle.y >= 60.0) && (obstacle.y <= 135.0)){
                         if(count_pass == 4){
@@ -324,8 +331,11 @@ class Master{
                         on_lane();
                         this->remove_task();
 						// NUEVO: Apagar señal izquierda al salir del estado
+            			std_msgs::Bool signal_msg;
             			signal_msg.data = false;
-            			left_signal_pub.publish(signal_msg)
+            			left_signal_pub.publish(signal_msg);
+            			signal_activated = false;
+            			ROS_INFO("← Left signal OFF");
                         break;
                     }
                 }
@@ -354,9 +364,15 @@ class Master{
             }
             else if (current_task.ID ==   MOVING_RIGHT){
 				// NUEVO: Activar señal derecha
-    			std_msgs::Bool signal_msg;
-    			signal_msg.data = true;
-    			right_signal_pub.publish(signal_msg);
+    			static bool signal_activated = false;
+    			if (!signal_activated) {
+        			std_msgs::Bool signal_msg;
+        			signal_msg.data = true;
+        			right_signal_pub.publish(signal_msg);
+        			signal_activated = true;
+        			ROS_INFO("→ Right signal ON");
+    			}
+				
                 time_long = 2250;
                 if (count_pass == 4) {
                     time_long = 3500;
@@ -374,8 +390,11 @@ class Master{
                         start =  std::chrono::steady_clock::now();
 
 						// Apagar señal
+        				std_msgs::Bool signal_msg;
         				signal_msg.data = false;
         				right_signal_pub.publish(signal_msg);
+        				signal_activated = false;
+        				ROS_INFO("→ Right signal OFF");
                     }
                     else{
                         speed_pid = -200;
