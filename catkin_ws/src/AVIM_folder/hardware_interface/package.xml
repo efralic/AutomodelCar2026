@@ -1,1 +1,16 @@
-
+<?xml version="1.0"?>
+<package format="2">
+  <name>hardware_interface</name>
+  <version>1.0.0</version>
+  <description>GPIO interface for RPi 4</description>
+  
+  <maintainer email="tu_email@example.com">Tu Nombre</maintainer>
+  <license>MIT</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>rospy</depend>
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+</package>
