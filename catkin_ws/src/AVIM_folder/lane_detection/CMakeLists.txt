@@ -225,3 +225,8 @@ add_executable(lane_detection src/lane_detection.cpp)
 target_link_libraries(lane_detection ${catkin_LIBRARIES})
 target_link_libraries(lane_detection ${OpenCV_LIBRARIES})
 
+# Al final del archivo, agregar:
+catkin_install_python(PROGRAMS
+  src/stop_sign_detector.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
