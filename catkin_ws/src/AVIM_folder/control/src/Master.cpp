@@ -16,6 +16,7 @@ int MOVING_LEFT = 2;
 int PASSING = 3;
 int MOVING_RIGHT = 4;
 int MOVING_RIGHT_LANE = 5;
+int STOP_AT_SIGN = 6;
 
 static std::map<int, std::string>task_names{
      { LANE_DRIVING,"Lane driving"},
@@ -24,6 +25,7 @@ static std::map<int, std::string>task_names{
      { PASSING, "Passing obstacle" },
      { MOVING_RIGHT, "Returning right lane"},
      { MOVING_RIGHT_LANE , "Returning right lane to lane"}
+	 { STOP_AT_SIGN, "Stopping at STOP sign"}
 };
 
 
@@ -45,8 +47,12 @@ class Master{
         ros::NodeHandle nh_;
         ros::Subscriber distance_center;
         ros::Subscriber object_detection;
+		ros::Subscriber stop_sign_sub;
         ros::Publisher angle_pub;
         ros::Publisher speed_pub;
+		ros::Publisher left_signal_pub;
+		ros::Publisher right_signal_pub;
+		ros::Publisher blinkers_pub;
 
         std_msgs::Int16 angle_message;
         std_msgs::Int16 speed_message;
@@ -74,6 +80,7 @@ class Master{
         float dist_to_keep;
         int vel_decreasing_factor;
         int mid_speed;
+		bool stop_sign_detected;
         std::chrono::steady_clock::time_point start;
         std::chrono::steady_clock::time_point end;
    
@@ -85,6 +92,10 @@ class Master{
             object_detection = nh_.subscribe("/objects_points", 1, &Master::object_detec_clbk, this);
             angle_pub = nh_.advertise<std_msgs::Int16>("/AutoModelMini/manual_control/steering",1000);
             speed_pub = nh_.advertise<std_msgs::Int16>("/AutoModelMini/manual_control/speed",1000);
+			left_signal_pub = nh_.advertise<std_msgs::Bool>("/lights/left_signal", 1);
+			right_signal_pub = nh_.advertise<std_msgs::Bool>("/lights/right_signal", 1);
+			blinkers_pub = nh_.advertise<std_msgs::Bool>("/lights/blinkers", 1);
+			stop_sign_sub = nh_.subscribe("/stop_sign_detected", 1, &Master::stop_sign_callback, this);
             num_found_objects = 0;
             dist_now = 0;
             angle_now = 0;
@@ -103,8 +114,17 @@ class Master{
             dist_to_keep = DIST_TO_KEEP;
             max_waiting_time = MAX_WAIT_TIME; 
             passing_enabled = PASSING_ENABLED;
+			stop_sign_detected = false;
             this->add_task(task);
         }
+
+		// NUEVA función callback
+		void stop_sign_callback(const std_msgs::Bool::ConstPtr& msg) {
+    		stop_sign_detected = msg->data;
+    		if (stop_sign_detected) {
+        		ROS_INFO("STOP SIGN DETECTED!");
+    		}
+		}
 
 
         void dist_center_clbk(const std_msgs::Int16& dis_now_center){
@@ -143,6 +163,12 @@ class Master{
         }
 
         void task_assigner(void){
+			// NUEVO: Prioridad máxima para STOP sign
+    		if (stop_sign_detected && get_current_task().ID == LANE_DRIVING) {
+        		this->add_task(Task(STOP_AT_SIGN));
+        		stop_sign_detected = false;  // Reset flag
+        		return;
+    		}
             // Get the current task   
             Task current_task = get_current_task();
             // Checks the number of detected obstacles.
@@ -177,6 +203,47 @@ class Master{
         void task_solver(void){
             Task current_task = this->get_current_task();
             ROS_INFO_STREAM("[Current task]: " <<current_task.name);
+
+			// NUEVO: Manejo de STOP sign
+    		if (current_task.ID == STOP_AT_SIGN) {
+        		static auto stop_start_time = std::chrono::steady_clock::now();
+        		static bool stop_initiated = false;
+        
+        		if (!stop_initiated) {
+            		// Primera vez en este estado
+            		stop_initiated = true;
+            		stop_start_time = std::chrono::steady_clock::now();
+            
+            		// Activar intermitentes
+            		std_msgs::Bool blinkers_msg;
+            		blinkers_msg.data = true;
+            		blinkers_pub.publish(blinkers_msg);
+            
+            		ROS_INFO("Stopping at STOP sign - blinkers ON");
+        		}
+        
+        		// Detener el vehículo
+        		on_lane_stop();
+        
+        		// Esperar 2 segundos
+        		auto now = std::chrono::steady_clock::now();
+        		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - stop_start_time).count();
+        
+        		if (elapsed > 2000) {  // 2 segundos
+           			 // Apagar intermitentes
+            		std_msgs::Bool blinkers_msg;
+            		blinkers_msg.data = false;
+           			blinkers_pub.publish(blinkers_msg);
+            
+            		// Reanudar navegación
+            		this->remove_task();
+            		stop_initiated = false;
+            		ROS_INFO("Resuming after STOP sign - blinkers OFF");
+        		}
+        
+        		return;  // No ejecutar resto de task_solver
+    		}
+			
             if (current_task.ID == LANE_DRIVING){
                 for (auto obstacle : this->found_objects){
                     if ((obstacle.y > 55.0 && obstacle.y < 125.0) && (obstacle.x <= 200.0)){
@@ -237,6 +304,10 @@ class Master{
                 }
             }
             else if (current_task.ID == MOVING_LEFT){
+				// NUEVO: Activar señal izquierda
+    			std_msgs::Bool signal_msg;
+    			signal_msg.data = true;
+    			left_signal_pub.publish(signal_msg);
                 for (auto obstacle : this->found_objects){
                     if ((obstacle.y >= 60.0) && (obstacle.y <= 135.0)){
                         if(count_pass == 4){
@@ -252,6 +323,9 @@ class Master{
                     else if((obstacle.y >= 0.0 && obstacle.y < 60.0) || (obstacle.y >= 360.0 && obstacle.y <= 315.0)){
                         on_lane();
                         this->remove_task();
+						// NUEVO: Apagar señal izquierda al salir del estado
+            			signal_msg.data = false;
+            			left_signal_pub.publish(signal_msg)
                         break;
                     }
                 }
@@ -279,6 +353,10 @@ class Master{
                 }
             }
             else if (current_task.ID ==   MOVING_RIGHT){
+				// NUEVO: Activar señal derecha
+    			std_msgs::Bool signal_msg;
+    			signal_msg.data = true;
+    			right_signal_pub.publish(signal_msg);
                 time_long = 2250;
                 if (count_pass == 4) {
                     time_long = 3500;
@@ -294,6 +372,10 @@ class Master{
                         on_lane_right();
                         this->remove_task();
                         start =  std::chrono::steady_clock::now();
+
+						// Apagar señal
+        				signal_msg.data = false;
+        				right_signal_pub.publish(signal_msg);
                     }
                     else{
                         speed_pid = -200;
