@@ -1,0 +1,27 @@
+<launch>
+  <!-- 
+    Spawn AutoNOMOS Mini Robot in Gazebo
+    Used by all simulation launch files
+  -->
+  
+  <!-- Arguments -->
+  <arg name="robot_name"  default="AutoModelMini"/>
+  <arg name="pos_x"       default="2.5"/>
+  <arg name="pos_y"       default="3.3"/>
+  <arg name="pos_z"       default="0.17"/>
+  <arg name="yaw"         default="3.14159"/>  <!-- 180 degrees (facing forward) -->
+  
+  <!-- Spawn robot using gazebo service -->
+  <node name="spawn_autoNOMOS" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-sdf 
+              -file $(find autonomos_gazebo_simulation)/models/AutoNOMOS_mini/model.sdf
+              -model $(arg robot_name)
+              -x $(arg pos_x)
+              -y $(arg pos_y) 
+              -z $(arg pos_z)
+              -Y $(arg yaw)"/>
+              
+  <!-- Robot state publisher (if needed) -->
+  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/> -->
+  
+</launch>
