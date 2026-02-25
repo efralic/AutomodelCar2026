@@ -1,1 +1,27 @@
-
+<launch>
+  <!-- Gazebo + Mundo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find autonomos_gazebo_simulation)/worlds/TMR2021.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+  </include>
+  
+  <!-- Spawn Robot + Obstacles + Control (test3_start.py hace todo) -->
+  <node name="spawn_test3_dynamic" pkg="bring_up" type="test3_start.py" 
+        output="screen" launch-prefix="bash -c 'sleep 3; $0 $@'"/>
+  
+  <!-- Lane Detection -->
+  <node name="lane_detection" pkg="lane_detection" type="lane_detection" output="screen">
+    <remap from="/app/camera/rgb/image_raw" to="/AutoModelMini/camera/rgb/image_raw"/>
+  </node>
+  
+  <!-- Object Detection -->
+  <node name="object_detection" pkg="object_detection" type="object_detection" output="screen">
+    <remap from="/scan" to="/AutoModelMini/scan"/>
+  </node>
+  
+  <!-- Master (dinámico) -->
+  <node name="Master" pkg="control" type="Master" output="screen"/>
+  
+</launch>
