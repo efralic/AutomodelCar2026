@@ -257,7 +257,7 @@ class Master{
                         }
                         else{
                             speed_pid = -100;
-                            angle_pd = 175;
+                            angle_pd = 185;
                         }
                         break;
                     }
@@ -307,7 +307,7 @@ class Master{
                     }
                     else{
                         speed_pid = -200;
-                        angle_pd = 20;
+                        angle_pd = 35;
                     }
             }
             else if (current_task.ID ==   MOVING_RIGHT_LANE){
@@ -374,7 +374,7 @@ class Master{
          }
 
         void on_lane_front_object(float obstacle_dist){
-            u_angle = static_cast<int>(kp_angle * static_cast<float>(dist_now) + kd_angle * static_cast<float>(dist_now - angle_last));
+            u_angle = static_cast<int>(kp_angle * static_cast<float>(dist_now) + kd_angle * static_cast<float>(dist_now - dist_last));
             angle_pd = 90 + u_angle;
             if(angle_pd<= 45)
 	            angle_pd = 45;
@@ -386,7 +386,7 @@ class Master{
 	            speed_pid = - 535;
             else if(speed_pid >= 250)
 	            speed_pid = 250;
-            angle_last = angle_pd;
+            dist_last = dist_now;
         }
         
         int decrement_speed(float obstacle_dist){
