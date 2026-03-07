@@ -91,8 +91,8 @@ class Master{
 			dist_last = 0; //parte agregada
             angle_now = 0;
             angle_last = 0;
-            kp_angle = 0.825;//1.025
-            kd_angle = 0.0297;
+            kp_angle = 1.15;//0.825
+            kd_angle = 0.045;//0.0297
             error_angle = 0.0;
             u_angle = 0;
             speed_pid = 0;
@@ -256,8 +256,8 @@ class Master{
                             angle_pd = 170;
                         }
                         else{
-                            speed_pid = -100;
-                            angle_pd = 185;
+                            speed_pid = -200;
+                            angle_pd = 180;
                         }
                         break;
                     }
