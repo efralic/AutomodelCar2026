@@ -19,7 +19,7 @@
   <!-- Object Detection Parking -->
   <node name="object_detection_parking" pkg="object_detection_parking" 
         type="object_detection_parking" output="screen">
-    <remap from="/scan" to="/AutoModelMini/scan"/>
+    <remap from="/AutoModelMini/scan" to="/scan"/>
   </node>
   
   <!-- Master Parking -->
