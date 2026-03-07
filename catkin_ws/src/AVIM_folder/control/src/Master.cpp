@@ -25,7 +25,7 @@ static std::map<int, std::string>task_names{
      { MOVING_LEFT, "Moving to left lane"},
      { PASSING, "Passing obstacle" },
      { MOVING_RIGHT, "Returning right lane"},
-     { MOVING_RIGHT_LANE , "Returning right lane to lane"}
+     { MOVING_RIGHT_LANE , "Returning right lane to lane"},
 	 { STOP_AT_SIGN, "Stopping at STOP sign"}
 };
 
@@ -61,6 +61,7 @@ class Master{
         std::vector<geometry_msgs::Point> found_objects;
         int num_found_objects;
         int dist_now;
+		int dist_last;
         int angle_now;
         int angle_last;
         float kp_angle;
@@ -103,8 +104,8 @@ class Master{
             dist_now = 0;
             angle_now = 0;
             angle_last = 0;
-            kp_angle = 0.825;//1.025
-            kd_angle = 0.0297;
+            kp_angle = 1.15;//0.825
+            kd_angle = 0.045;//0.0297
             error_angle = 0.0;
             u_angle = 0;
             speed_pid = 0;
@@ -174,15 +175,13 @@ class Master{
         		stop_sign_detected = false;  // Reset flag
         		return;
     		}
-            // Get the current task   
-            Task current_task = get_current_task();
             // Checks the number of detected obstacles.
             if (this->num_found_objects > 0){
                                 
                 //Checks each obstacle info
                 for (auto obstacle : this->found_objects){
                     // Obstacle in front detected while driving
-                    if ((obstacle.y > 70.0) && (obstacle.y < 110.0) && (obstacle.x < 119.0)){
+                    if ((obstacle.y > 45.0) && (obstacle.y < 135.0) && (obstacle.x < 119.0)){
 
                        if (current_task.ID == LANE_DRIVING){
                             // Adds following routine
@@ -284,7 +283,12 @@ class Master{
                             break;
                         }
                         else if (obstacle.x < (this->dist_to_keep - 10)){
-                            this->count = 0;
+                            //this->count = 0;
+							//Parte agregada
+                            if (this->passing_enabled == true){
+                                this->count += 1;
+                            }
+							
                             if(count_pass == 2 || count_pass == 3){
                                on_lane_front_object_cross(obstacle.x);
                             }
@@ -318,8 +322,8 @@ class Master{
                 for (auto obstacle : this->found_objects){
                     if ((obstacle.y >= 60.0) && (obstacle.y <= 135.0)){
                         if(count_pass == 4){
-                            speed_pid = -250;
-                            angle_pd = 170;
+                            speed_pid = -100;
+                            angle_pd = 180;
                         }
                         else{
                             speed_pid = -250;
@@ -327,7 +331,7 @@ class Master{
                         }
                         break;
                     }
-                    else if((obstacle.y >= 0.0 && obstacle.y < 60.0) || (obstacle.y >= 360.0 && obstacle.y <= 315.0)){
+                    else if((obstacle.y >= 0.0 && obstacle.y < 60.0) || (obstacle.y >= 315.0 && obstacle.y <= 360.0)){
                         on_lane();
                         this->remove_task();
 						// NUEVO: Apagar señal izquierda al salir del estado
@@ -427,7 +431,7 @@ class Master{
         }
 
         void on_lane(void){
-            u_angle = static_cast<int>(kp_angle*static_cast<float>(dist_now) + kd_angle*static_cast<float>(dist_now - angle_last));
+            u_angle = static_cast<int>(kp_angle*static_cast<float>(dist_now) + kd_angle*static_cast<float>(dist_now - dist_last));
             angle_pd = 90 + u_angle;
             if(angle_pd<= 45)
 	            angle_pd = 45;
@@ -440,11 +444,12 @@ class Master{
 	            speed_pid = - mid_speed;
             else if(speed_pid > 0)
 	            speed_pid = 0;
-            angle_last = angle_pd;
+            //angle_last = angle_pd;
+			dist_last = dist_now;
         }
 
         void on_lane_right(void){
-            u_angle = static_cast<int>(kp_angle*static_cast<float>(dist_now) + kd_angle*static_cast<float>(dist_now - angle_last));
+            u_angle = static_cast<int>(kp_angle*static_cast<float>(dist_now) + kd_angle*static_cast<float>(dist_now - dist_last));
             angle_pd = 90 + u_angle;
             if(angle_pd<= 0)
 	            angle_pd = 0;
@@ -452,7 +457,8 @@ class Master{
 	            angle_pd = 180;
             u_speed = static_cast<int>(kp_speed * dist_now);
             speed_pid = (count_pass == 1) ? -200 : -150;
-            angle_last = angle_pd;
+            //angle_last = angle_pd;
+			dist_last = dist_now;
         }
 
          void on_lane_front_object_cross(float obstacle_dist){
@@ -465,7 +471,7 @@ class Master{
          }
 
         void on_lane_front_object(float obstacle_dist){
-            u_angle = static_cast<int>(kp_angle * static_cast<float>(dist_now) + kd_angle * static_cast<float>(dist_now - angle_last));
+            u_angle = static_cast<int>(kp_angle * static_cast<float>(dist_now) + kd_angle * static_cast<float>(dist_now - dist_last));
             angle_pd = 90 + u_angle;
             if(angle_pd<= 45)
 	            angle_pd = 45;
@@ -477,7 +483,8 @@ class Master{
 	            speed_pid = - 535;
             else if(speed_pid >= 250)
 	            speed_pid = 250;
-            angle_last = angle_pd;
+            //angle_last = angle_pd;
+			dist_last = dist_now;
         }
         
         int decrement_speed(float obstacle_dist){
@@ -488,14 +495,15 @@ class Master{
         }
 
         void on_lane_stop(void){
-            u_angle = static_cast<int>(kp_angle*static_cast<float>(dist_now) + kd_angle*static_cast<float>(dist_now - angle_last));
+            u_angle = static_cast<int>(kp_angle*static_cast<float>(dist_now) + kd_angle*static_cast<float>(dist_now - dist_last));
             angle_pd = 90 + u_angle;
             if(angle_pd<= 45)
 	            angle_pd = 45;
             else if(angle_pd >= 135)
 	            angle_pd = 135;
             speed_pid = 0;
-            angle_last = angle_pd;
+            //angle_last = angle_pd;
+			dist_last = dist_now;
         }
         void publish_policies(){
             angle_message.data = angle_pd;
