@@ -18,7 +18,7 @@
   
   <!-- Object Detection -->
   <node name="object_detection" pkg="object_detection" type="object_detection" output="screen">
-    <remap from="/scan" to="/AutoModelMini/scan"/>
+    <remap from="/AutoModelMini/scan" to="/scan"/>
   </node>
   
   <!-- Master (dinámico) -->
