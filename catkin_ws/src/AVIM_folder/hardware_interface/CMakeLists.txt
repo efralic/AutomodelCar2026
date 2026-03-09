@@ -17,5 +17,6 @@ catkin_install_python(PROGRAMS
   src/motor_driver.py
   src/lights_controller.py
   src/ultrasonic_sensors.py
+  src/teleop_controller.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
