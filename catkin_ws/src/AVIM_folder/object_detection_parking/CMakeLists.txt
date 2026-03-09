@@ -230,5 +230,9 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(object_detection_parking src/object_detection_parking.cpp)
 
+add_dependencies(object_detection_parking
+  ${catkin_EXPORTED_TARGETS}
+)
+
 target_link_libraries(object_detection_parking  ${catkin_LIBRARIES})
 target_link_libraries(object_detection_parking ${OpenCV_LIBRARIES})
