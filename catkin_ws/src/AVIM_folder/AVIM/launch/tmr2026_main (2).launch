@@ -1,0 +1,111 @@
+<launch>
+  <!--
+    TMR 2026 - Main Launch File
+    Hardware: Raspberry Pi 4, USB Camera, RPLIDAR C1
+
+    Uso:
+      Prueba 1 - Señales de tránsito   : roslaunch AVIM tmr2026_main.launch prueba:=1
+      Prueba 2 - Obstáculos estáticos  : roslaunch AVIM tmr2026_main.launch prueba:=2
+      Prueba 3 - Obstáculos en movimiento: roslaunch AVIM tmr2026_main.launch prueba:=3
+      Prueba 4 - Estacionamiento       : roslaunch AVIM tmr2026_main.launch prueba:=4
+  -->
+
+  <!-- ── Argumentos ──────────────────────────────────────────────── -->
+  <arg name="prueba"             default="1"     doc="Número de prueba: 1, 2, 3 o 4"/>
+  <arg name="enable_teleop"      default="true"  doc="Habilitar teleoperación con joystick"/>
+  <arg name="enable_debug_images"default="false" doc="Publicar imágenes de debug"/>
+  <arg name="camera_device"      default="/dev/video0" doc="Dispositivo de cámara USB"/>
+  <arg name="lidar_port"         default="/dev/ttyUSB0" doc="Puerto serie del RPLIDAR C1"/>
+
+  <!-- ── Cámara USB (usb_cam) ───────────────────────────────────── -->
+  <!-- FIX: reemplaza raspicam_node por usb_cam -->
+  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true">
+    <param name="video_device"   value="$(arg camera_device)"/>
+    <param name="image_width"    value="320"/>
+    <param name="image_height"   value="240"/>
+    <param name="pixel_format"   value="yuyv"/>
+    <param name="camera_frame_id"value="camera"/>
+    <param name="io_method"      value="mmap"/>
+    <param name="framerate"      value="30"/>
+  </node>
+
+  <!-- ── LIDAR RPLIDAR C1 ──────────────────────────────────────── -->
+  <!-- FIX: baudrate 460800 para C1 (A1 usaba 115200) -->
+  <node name="rplidar_node" pkg="rplidar_ros" type="rplidarNode" output="screen" respawn="true">
+    <param name="serial_port"      type="string" value="$(arg lidar_port)"/>
+    <param name="serial_baudrate"  type="int"    value="460800"/>
+    <param name="frame_id"         type="string" value="laser"/>
+    <param name="inverted"         type="bool"   value="false"/>
+    <param name="angle_compensate" type="bool"   value="true"/>
+  </node>
+
+  <!-- ── Hardware Interface ─────────────────────────────────────── -->
+  <group ns="hardware">
+    <node name="motor_driver"      pkg="hardware_interface" type="motor_driver.py"
+          output="screen" respawn="true"/>
+    <node name="lights_controller" pkg="hardware_interface" type="lights_controller.py"
+          output="screen" respawn="true"/>
+    <node name="ultrasonic_sensors"pkg="hardware_interface" type="ultrasonic_sensors.py"
+          output="screen" respawn="true"/>
+  </group>
+
+  <!-- ── Visión ─────────────────────────────────────────────────── -->
+  <group ns="vision">
+    <node name="lane_detection" pkg="lane_detection" type="lane_detection"
+          output="screen" respawn="true">
+      <param name="debug_output"  value="$(arg enable_debug_images)"/>
+      <param name="camera_topic"  value="/usb_cam/image_raw"/>
+    </node>
+
+    <!-- stop_sign_detector: solo necesario en prueba 1 -->
+    <node name="stop_sign_detector" pkg="lane_detection" type="stop_sign_detector.py"
+          output="screen" respawn="true"
+          if="$(eval arg('prueba') == '1')">
+      <param name="camera_topic" value="/usb_cam/image_raw"/>
+      <param name="debug_output" value="$(arg enable_debug_images)"/>
+    </node>
+
+    <!-- object_detection normal: pruebas 1, 2 y 3 -->
+    <node name="object_detection" pkg="object_detection" type="object_detection"
+          output="screen" respawn="true"
+          unless="$(eval arg('prueba') == '4')"/>
+
+    <!-- object_detection_parking: solo prueba 4 -->
+    <node name="object_detection_parking" pkg="object_detection_parking"
+          type="object_detection_parking" output="screen" respawn="true"
+          if="$(eval arg('prueba') == '4')"/>
+  </group>
+
+  <!-- ── Control (Master según prueba) ─────────────────────────── -->
+  <!-- Prueba 1: Master con STOP sign -->
+  <node name="Master" pkg="control" type="Master"
+        output="screen" respawn="true"
+        if="$(eval arg('prueba') == '1')"/>
+
+  <!-- Prueba 2: Master con obstáculos estáticos -->
+  <node name="Master" pkg="control" type="Master_static"
+        output="screen" respawn="true"
+        if="$(eval arg('prueba') == '2')"/>
+
+  <!-- Prueba 3: Master con obstáculos en movimiento (mismo nodo que estáticos) -->
+  <node name="Master" pkg="control" type="Master_static"
+        output="screen" respawn="true"
+        if="$(eval arg('prueba') == '3')"/>
+
+  <!-- Prueba 4: Master de estacionamiento -->
+  <node name="Master" pkg="control" type="Master_parking"
+        output="screen" respawn="true"
+        if="$(eval arg('prueba') == '4')"/>
+
+  <!-- ── Teleoperación ──────────────────────────────────────────── -->
+  <group if="$(arg enable_teleop)">
+    <node name="joy_node" pkg="joy" type="joy_node" output="screen">
+      <param name="dev"             value="/dev/input/js0"/>
+      <param name="deadzone"        value="0.1"/>
+      <param name="autorepeat_rate" value="20"/>
+    </node>
+    <node name="teleop_controller" pkg="hardware_interface"
+          type="teleop_controller.py" output="screen"/>
+  </group>
+
+</launch>
