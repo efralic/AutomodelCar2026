@@ -23,6 +23,6 @@
   </node>
   
   <!-- Master Parking -->
-  <node name="Master_parking" pkg="control" type="Master_parking" output="screen"/>
+  <node name="Master_parking_paralelo" pkg="control" type="Master_parking_paralelo" output="screen"/>
   
 </launch>
