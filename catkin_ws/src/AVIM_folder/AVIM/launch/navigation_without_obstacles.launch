@@ -1,0 +1,10 @@
+<launch>
+  <!-- Prueba 1: Reconocimiento de señales de tránsito -->
+  <node name="lane_detection"     pkg="lane_detection"   type="lane_detection"      output="screen">
+    <param name="camera_topic"    value="/usb_cam/image_raw"/>
+  </node>
+  <node name="stop_sign_detector" pkg="lane_detection"   type="stop_sign_detector.py" output="screen">
+    <param name="camera_topic"    value="/usb_cam/image_raw"/>
+  </node>
+  <node name="Master"             pkg="control"          type="Master"              output="screen"/>
+</launch>

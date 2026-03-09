@@ -1,0 +1,9 @@
+<launch>
+  <!-- Prueba 3: Navegación con obstáculos en movimiento -->
+  <!-- FIX: cambiado Master -> Master_static (tiene lógica de rebase) -->
+  <node name="lane_detection"   pkg="lane_detection"   type="lane_detection"   output="screen">
+    <param name="camera_topic"  value="/usb_cam/image_raw"/>
+  </node>
+  <node name="object_detection" pkg="object_detection" type="object_detection" output="screen"/>
+  <node name="Master"           pkg="control"          type="Master_static"    output="screen"/>
+</launch>
