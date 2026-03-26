@@ -13,7 +13,7 @@
   <!-- ── Argumentos ──────────────────────────────────────────────── -->
   <arg name="prueba"             default="1"     doc="Número de prueba: 1, 2, 3 o 4"/>
   <arg name="enable_teleop"      default="true"  doc="Habilitar teleoperación con joystick"/>
-  <arg name="enable_debug_images"default="false" doc="Publicar imágenes de debug"/>
+  <arg name="enable_debug_images" default="false" doc="Publicar imágenes de debug"/>
   <arg name="camera_device"      default="/dev/video0" doc="Dispositivo de cámara USB"/>
   <arg name="lidar_port"         default="/dev/ttyUSB0" doc="Puerto serie del RPLIDAR C1"/>
 
