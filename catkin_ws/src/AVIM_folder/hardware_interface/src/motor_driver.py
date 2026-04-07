@@ -43,8 +43,8 @@ class MotorDriver:
 
         # ── Servo pin ────────────────────────────────────────────────────
         self.SERVO_PIN    = 13
-        self.SERVO_MIN_PULSE  = 1000   # 45 degrees
-        self.SERVO_MAX_PULSE  = 2000   # 135 degrees
+        self.SERVO_MIN_PULSE  = 1222   # 65 degrees
+        self.SERVO_MAX_PULSE  = 1778   # 115 degrees
         self.SERVO_CENTER     = 1500   # 90 degrees
 
         # ── Vehicle state ────────────────────────────────────────────────
@@ -118,12 +118,12 @@ class MotorDriver:
         self.set_motor_speed(speed)
 
     def steering_callback(self, msg):
-        """Steering angle 45-135 degrees (90 = center)."""
+        """Steering angle 65-115 degrees (90 = center)."""
         # BUG FIX: same inverted condition as speed_callback.
         if not self.autonomous_mode or self.emergency_stop:
             return
 
-        angle = max(45, min(135, int(msg.data)))
+        angle = max(65, min(115, int(msg.data)))
         self.current_angle = angle
         self.set_servo_angle(angle)
 
@@ -167,8 +167,8 @@ class MotorDriver:
         rospy.logdebug(f"Motors: {direction}, value={m_speed}")
 
     def set_servo_angle(self, angle: int):
-        """Map angle (45-135°) to servo pulse width (1000-2000 µs)."""
-        pulse = self.map_range(angle, 45, 135,
+        """Map angle (65-115°) to servo pulse width (1222-1778 µs)."""
+        pulse = self.map_range(angle, 65, 115,
                                self.SERVO_MIN_PULSE,
                                self.SERVO_MAX_PULSE)
         self.pi.set_servo_pulsewidth(self.SERVO_PIN, int(pulse))
