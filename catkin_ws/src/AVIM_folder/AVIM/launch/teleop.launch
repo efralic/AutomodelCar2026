@@ -1,0 +1,41 @@
+<launch>
+  <!--
+    TMR 2026 - Teleoperacion independiente
+    Lanza solo los nodos necesarios para control manual con PS4
+    NO lanza ningun Master autonomo
+
+    Uso:
+      roslaunch AVIM teleop.launch
+  -->
+
+  <!-- Camara USB -->
+  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen">
+    <param name="video_device"    value="/dev/video0"/>
+    <param name="image_width"     value="320"/>
+    <param name="image_height"    value="240"/>
+    <param name="pixel_format"    value="yuyv"/>
+    <param name="camera_frame_id" value="camera"/>
+    <param name="io_method"       value="mmap"/>
+    <param name="framerate"       value="30"/>
+  </node>
+
+  <!-- Hardware -->
+  <group ns="hardware">
+    <node name="motor_driver" pkg="hardware_interface" type="motor_driver.py"
+          output="screen" respawn="true"/>
+    <node name="lights_controller" pkg="hardware_interface" type="lights_controller.py"
+          output="screen" respawn="true"/>
+  </group>
+
+  <!-- Joystick PS4 -->
+  <node name="joy_node" pkg="joy" type="joy_node" output="screen">
+    <param name="dev"             value="/dev/input/js0"/>
+    <param name="deadzone"        value="0.1"/>
+    <param name="autorepeat_rate" value="20"/>
+  </node>
+
+  <!-- Teleop controller -->
+  <node name="teleop_controller" pkg="hardware_interface"
+        type="teleop_controller.py" output="screen"/>
+
+</launch>
