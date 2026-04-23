@@ -11,7 +11,7 @@
   -->
 
   <!-- ── Argumentos ──────────────────────────────────────────────── -->
-  <arg name="prueba"             default="1"     doc="Número de prueba: 1, 2, 3 o 4"/>
+  <arg name="prueba"             default="1"     doc="Numero de prueba: 1, 2, 3 o 4"/>
   <arg name="enable_teleop"      default="true"  doc="Habilitar teleoperación con joystick"/>
   <arg name="enable_debug_images" default="false" doc="Publicar imágenes de debug"/>
   <arg name="camera_device"      default="/dev/video0" doc="Dispositivo de cámara USB"/>
@@ -29,14 +29,15 @@
     <param name="framerate"      value="30"/>
   </node>
 
-  <!-- ── LIDAR RPLIDAR C1 ──────────────────────────────────────── -->
-  <!-- FIX: baudrate 460800 para C1 (A1 usaba 115200) -->
-  <node name="rplidar_node" pkg="rplidar_ros" type="rplidarNode" output="screen" respawn="true">
-    <param name="serial_port"      type="string" value="$(arg lidar_port)"/>
-    <param name="serial_baudrate"  type="int"    value="460800"/>
-    <param name="frame_id"         type="string" value="laser"/>
-    <param name="inverted"         type="bool"   value="false"/>
-    <param name="angle_compensate" type="bool"   value="true"/>
+  <!-- ── LIDAR LD20 ──────────────────────────────────────── -->
+  <!-- FIX: baudrate 230400 -->
+  <node name="ldlidar_publisher_ld14" pkg="ldlidar_sl_ros" type="ldlidar_sl_ros_node" output="screen">
+    <param name="product_name"      value="LDLiDAR_LD14P"/>
+    <param name="laser_scan_topic_name"     value="$(arg laser_scan_topic_name)"/>
+    <param name="serial_baudrate"      value="460800"/>
+    <param name="frame_id"          value="laser"/>
+    <param name="inverted"            value="false"/>
+    <param name="angle_compensate"    value="true"/>
   </node>
 
   <!-- ── Hardware Interface ─────────────────────────────────────── -->
@@ -80,22 +81,22 @@
   <!-- Prueba 1: Master con STOP sign -->
   <node name="Master" pkg="control" type="Master"
         output="screen" respawn="true"
-        if="$(eval arg('prueba') == '1')"/>
+        if="$(eval arg('prueba') == 1)"/>
 
   <!-- Prueba 2: Master con obstáculos estáticos -->
   <node name="Master" pkg="control" type="Master_static"
         output="screen" respawn="true"
-        if="$(eval arg('prueba') == '2')"/>
+        if="$(eval arg('prueba') == 2)"/>
 
   <!-- Prueba 3: Master con obstáculos en movimiento (mismo nodo que estáticos) -->
   <node name="Master" pkg="control" type="Master_static"
         output="screen" respawn="true"
-        if="$(eval arg('prueba') == '3')"/>
+        if="$(eval arg('prueba') == 3)"/>
 
   <!-- Prueba 4: Master de estacionamiento -->
   <node name="Master" pkg="control" type="Master_parking"
         output="screen" respawn="true"
-        if="$(eval arg('prueba') == '4')"/>
+        if="$(eval arg('prueba') == 4)"/>
 
   <!-- ── Teleoperación ──────────────────────────────────────────── -->
   <group if="$(arg enable_teleop)">
