@@ -31,13 +31,13 @@
 
   <!-- ── LIDAR LD20 ──────────────────────────────────────── -->
   <!-- FIX: baudrate 230400 -->
-  <node name="ldlidar_publisher_ld14" pkg="ldlidar_sl_ros" type="ldlidar_sl_ros_node" output="screen">
+  <node name="ldlidar_node" pkg="ldlidar_sl_ros" type="ldlidar_sl_ros_node" output="screen" respaw="true">
     <param name="product_name"      value="LDLiDAR_LD14P"/>
-    <param name="laser_scan_topic_name"     value="$(arg laser_scan_topic_name)"/>
-    <param name="serial_baudrate"      value="460800"/>
+    <param name="port_name"         value="/dev/ttyUSB0"/>
+    <param name="port_baudrate"     value="230400"/>
+    <param name="laser_scan_dir"    value="true"/>
+    <param name="topic_name"        value="scan"/>
     <param name="frame_id"          value="laser"/>
-    <param name="inverted"            value="false"/>
-    <param name="angle_compensate"    value="true"/>
   </node>
 
   <!-- ── Hardware Interface ─────────────────────────────────────── -->
